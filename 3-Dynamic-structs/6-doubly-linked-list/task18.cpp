@@ -63,6 +63,22 @@ struct list
     }
 };
 
+void setList(list &lst)
+{
+    int n;
+    std::cout << "Enter number of elements: ";
+    std::cin >> n;
+
+    // List filling
+    std::cout << "Enter list elements separated by space: ";
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        std::cin >> x;
+        lst.push(x);
+    }
+}
+
 bool isPrime(int num)
 {
     if (num < 2) return false;
@@ -80,6 +96,7 @@ void shiftToFirstPrime(list &lst)
     node *current = lst.next;
     while (current && !isPrime(current->data))
     {
+        // Shift elements
         current = current->next;
     }
 
@@ -92,22 +109,6 @@ void shiftToFirstPrime(list &lst)
     lst.prev = current->prev;
     current->prev = nullptr;
     if (lst.prev) lst.prev->next = nullptr;
-}
-
-void setList(list &lst)
-{
-    int n;
-    std::cout << "Enter number of elements: ";
-    std::cin >> n;
-
-    // List filling
-    std::cout << "Enter list elements separated by space: ";
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        std::cin >> x;
-        lst.push(x);
-    }
 }
 
 int main()

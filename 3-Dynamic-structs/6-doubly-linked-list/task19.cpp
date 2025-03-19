@@ -63,6 +63,21 @@ struct list
     }
 };
 
+void setList(list &lst)
+{
+    int n;
+    std::cout << "Enter number of elements: ";
+    std::cin >> n;
+
+    std::cout << "Enter list elements separated by space: ";
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        std::cin >> x;
+        lst.push(x);
+    }
+}
+
 void bubbleSort(list &lst)
 {
     if (!lst.next) return;
@@ -91,21 +106,6 @@ void bubbleSort(list &lst)
             }
         }
     } while (isSwapped);
-}
-
-void setList(list &lst)
-{
-    int n;
-    std::cout << "Enter number of elements: ";
-    std::cin >> n;
-
-    std::cout << "Enter list elements separated by space: ";
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        std::cin >> x;
-        lst.push(x);
-    }
 }
 
 int main()

@@ -33,6 +33,7 @@ struct list
     void erase(node *node)
     {
         if (!node) return;
+        // Change pointers
         if (node == next) next = node->next;
         if (node == prev) prev = node->prev;
         if (node->prev) node->prev->next = node->next;
@@ -51,6 +52,7 @@ struct list
         std::cout << std::endl;
     }
 
+    // List destructor
     ~list()
     {
         node *current = next;
