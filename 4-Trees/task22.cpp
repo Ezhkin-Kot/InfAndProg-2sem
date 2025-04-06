@@ -101,6 +101,16 @@ void printNodesWithOnlyLeftChild(tree *tr)
     printNodesWithOnlyLeftChild(tr->right);
 }
 
+void printTree2(tree *tr, int depth = 0)
+{
+    if (tr)
+    {
+        printTree2(tr->right, depth + 1);
+        std::cout << std::string(depth * 4, ' ') << tr->data << std::endl;
+        printTree2(tr->left, depth + 1);
+    }
+}
+
 int main()
 {
     tree *tr = setTree();

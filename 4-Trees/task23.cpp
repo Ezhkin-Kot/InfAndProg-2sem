@@ -133,6 +133,15 @@ void printTree(tree *tr)
         printTree(tr->right);
     }
 }
+void printTree2(tree *tr, int depth = 0)
+{
+    if (tr)
+    {
+        printTree2(tr->right, depth + 1);
+        std::cout << std::string(depth * 4, ' ') << tr->data << std::endl;
+        printTree2(tr->left, depth + 1);
+    }
+}
 
 void findLeaves(tree *tr, std::vector<tree *> &leaves)
 {
@@ -158,7 +167,8 @@ void deleteMidLeafGrandparent(tree *tr)
 
         if (midLeaf->parent && midLeaf->parent->parent)
         {
-            std::cout << "Deleting grandparent of " << midLeaf->data << ": " << midLeaf->parent->parent->data << std::endl;
+            std::cout << "Mid leaf = " << midLeaf->data << std::endl;
+            std::cout << "Mid leaf's grandparent = " << midLeaf->parent->parent->data << std::endl;
             deleteNode(tr, midLeaf->parent->parent);
         }
     }
@@ -169,12 +179,12 @@ int main()
     tree *tr = setTree();
 
     std::cout << "Tree: " << std::endl;
-    printTree(tr);
+    printTree2(tr);
     std::cout << std::endl;
 
     deleteMidLeafGrandparent(tr);
     std::cout << "Tree after deleting mid leaf's grandparent: " << std::endl;
-    printTree(tr);
+    printTree2(tr);
     std::cout << std::endl;
 
     return 0;
