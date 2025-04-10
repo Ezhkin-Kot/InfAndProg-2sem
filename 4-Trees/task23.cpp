@@ -1,7 +1,5 @@
 #include <iostream>
 #include <sstream>
-#include <vector>
-#include <algorithm>
 
 struct tree
 {
@@ -61,50 +59,6 @@ void insertNode(tree *&tr, int x)
     }
 }
 
-void deleteNode(tree *&root, tree *node)
-{
-    if (!node) return;
-
-    tree *parent = node->parent;
-
-    // Node without child
-    if (!node->left && !node->right)
-    {
-        if (parent)
-        {
-            if (parent->left == node) parent->left = nullptr;
-            else parent->right = nullptr;
-        }
-        delete node;
-    }
-    // Node with one child
-    else if (!node->left || !node->right)
-    {
-        tree *child = (node->left) ? node->left : node->right;
-
-        if (parent)
-        {
-            if (parent->left == node) parent->left = child;
-            else parent->right = child;
-        }
-        else
-        {
-            root = child;
-        }
-        child->parent = parent;
-        delete node;
-    }
-    // Node with two children
-    else
-    {
-        tree *succ = node->right;
-        while (succ->left) succ = succ->left;
-
-        node->data = succ->data;
-        deleteNode(root, succ);
-    }
-}
-
 tree *setTree()
 {
     tree *tr = nullptr;
@@ -133,45 +87,11 @@ void printTree(tree *tr)
         printTree(tr->right);
     }
 }
-void printTree2(tree *tr, int depth = 0)
+
+int treeHeight(tree *tr)
 {
-    if (tr)
-    {
-        printTree2(tr->right, depth + 1);
-        std::cout << std::string(depth * 4, ' ') << tr->data << std::endl;
-        printTree2(tr->left, depth + 1);
-    }
-}
-
-void findLeaves(tree *tr, std::vector<tree *> &leaves)
-{
-    if (!tr) return;
-    if (!tr->left && !tr->right)
-        leaves.push_back(tr);
-    findLeaves(tr->left, leaves);
-    findLeaves(tr->right, leaves);
-}
-
-void deleteMidLeafGrandparent(tree *tr)
-{
-    std::vector<tree *> leaves;
-    findLeaves(tr, leaves);
-
-    if (!leaves.empty())
-    {
-        std::sort(leaves.begin(), leaves.end(), [](tree *a, tree *b) {
-            return a->data < b->data;
-        });
-
-        tree *midLeaf = leaves[leaves.size() / 2];
-
-        if (midLeaf->parent && midLeaf->parent->parent)
-        {
-            std::cout << "Mid leaf = " << midLeaf->data << std::endl;
-            std::cout << "Mid leaf's grandparent = " << midLeaf->parent->parent->data << std::endl;
-            deleteNode(tr, midLeaf->parent->parent);
-        }
-    }
+    if (!tr) return -1;
+    return 1 + std::max(treeHeight(tr->left), treeHeight(tr->right));
 }
 
 int main()
@@ -179,17 +99,13 @@ int main()
     tree *tr = setTree();
 
     std::cout << "Tree: " << std::endl;
-    printTree2(tr);
+    printTree(tr);
     std::cout << std::endl;
 
-    deleteMidLeafGrandparent(tr);
-    std::cout << "Tree after deleting mid leaf's grandparent: " << std::endl;
-    printTree2(tr);
-    std::cout << std::endl;
+    std::cout << "Height of the tree: " << treeHeight(tr) << std::endl;
 
     return 0;
 }
 
-// Example: 10 5 15 2 7 12 20 6 8 13 18
-// 30 15 50 10 20 40 60 5 12 18 22 35 45 55 65
+// Example: 10 5 15 2 7 12 20 16 6
 

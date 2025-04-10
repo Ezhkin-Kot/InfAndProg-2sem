@@ -1,45 +1,11 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <algorithm>
 
 class Graph
 {
     private:
         std::map<int, std::vector<int> > adj;
-
-        bool detectCycles(int v, int parent, std::map<int, bool> &visited, std::vector<int> &path,
-                          std::vector<std::vector<int> > &cycles)
-        {
-            visited[v] = true;
-            path.push_back(v);
-
-            for (int neighbor: adj[v])
-            {
-                if (!visited[neighbor])
-                {
-                    if (detectCycles(neighbor, v, visited, path, cycles))
-                    {
-                        return true;
-                    }
-                }
-                else if (neighbor != parent)
-                {
-                    // Cycle finding
-                    std::vector<int> cycle;
-                    auto it = std::find(path.begin(), path.end(), neighbor);
-                    if (it != path.end())
-                    {
-                        cycle.insert(cycle.end(), it, path.end());
-                        cycle.push_back(neighbor); // Close cycle
-                        cycles.push_back(cycle);
-                    }
-                }
-            }
-
-            path.pop_back();
-            return false;
-        }
 
     public:
         // Add an edge (undirected)
@@ -77,35 +43,11 @@ class Graph
             }
         }
 
-        void printCycles()
+        std::vector<int> getAdjVertices(int v)
         {
-            std::map<int, bool> visited;
-            std::vector<std::vector<int> > cycles;
-            std::vector<int> path;
-
-            // DFS
-            for (const auto &pair: adj)
-            {
-                int vertex = pair.first;
-                detectCycles(vertex, -1, visited, path, cycles);
-            }
-
-            if (cycles.empty())
-            {
-                std::cout << "No cycles found." << std::endl;
-            }
-            else
-            {
-                std::cout << "Detected cycles:\n";
-                for (const auto &cycle: cycles)
-                {
-                    for (int v: cycle)
-                    {
-                        std::cout << v << " ";
-                    }
-                    std::cout << std::endl;
-                }
-            }
+            static const std::vector<int> empty;
+            auto it = adj.find(v);
+            return it != adj.end() ? it->second : empty;
         }
 };
 
@@ -118,7 +60,13 @@ int main()
     std::cout << "Graph:\n";
     g.printGraph();
 
-    g.printCycles();
+    std::pair<int, int> vertices;
+    std::cout << "Enter edge to add (format: u v): ";
+    std::cin >> vertices.first >> vertices.second;
+    g.addEdge(vertices.first, vertices.second);
+
+    std::cout << "Graph:\n";
+    g.printGraph();
 
     return 0;
 }

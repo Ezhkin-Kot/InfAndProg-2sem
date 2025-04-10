@@ -49,17 +49,6 @@ class Graph
             auto it = adj.find(v);
             return it != adj.end() ? it->second : empty;
         }
-
-        void printVerticesDegrees()
-        {
-            std::cout << "Vertices degrees:\n";
-            for (const auto &pair: adj)
-            {
-                int vertex = pair.first;
-                int degree = pair.second.size();
-                std::cout << "Vertex " << vertex << ": degree = " << degree << std::endl;
-            }
-        }
 };
 
 int main()
@@ -71,8 +60,20 @@ int main()
     std::cout << "Graph:\n";
     g.printGraph();
 
-    g.printVerticesDegrees();
+    int vertex;
+    std::cout << "Enter vertex: ";
+    std::cin >> vertex;
+    std::cout << "Number of adjacent vertices: " << g.getAdjVertices(vertex).size() << std::endl;
 
     return 0;
 }
+
+/* 
+5
+1 2
+1 3
+2 4
+3 4
+4 5
+*/
 

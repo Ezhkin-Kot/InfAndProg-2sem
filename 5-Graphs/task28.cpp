@@ -43,54 +43,22 @@ class Graph
             }
         }
 
-        void shortestPath(int start, int end)
+        std::vector<int> getAdjVertices(int v)
         {
-            std::map<int, bool> visited;
-            std::map<int, int> prev;
-            std::vector<int> queue;
+            static const std::vector<int> empty;
+            auto it = adj.find(v);
+            return it != adj.end() ? it->second : empty;
+        }
 
-            visited[start] = true;
-            queue.push_back(start);
-
-            // BFS
-            while (!queue.empty())
+        void printVerticesDegrees()
+        {
+            std::cout << "Vertices degrees:\n";
+            for (const auto &pair: adj)
             {
-                int current = queue.front();
-                queue.erase(queue.begin());
-
-                if (current == end) break;
-
-                for (int neighbor: adj[current])
-                {
-                    if (!visited[neighbor])
-                    {
-                        visited[neighbor] = true;
-                        prev[neighbor] = current;
-                        queue.push_back(neighbor);
-                    }
-                }
+                int vertex = pair.first;
+                int degree = pair.second.size();
+                std::cout << "Vertex " << vertex << ": degree = " << degree << std::endl;
             }
-
-            if (!visited[end])
-            {
-                std::cout << "Path not found." << std::endl;
-                return;
-            }
-
-            std::vector<int> path;
-            for (int at = end; at != start; at = prev[at])
-            {
-                path.push_back(at);
-            }
-            path.push_back(start);
-            std::reverse(path.begin(), path.end());
-
-            std::cout << "Shortest path: ";
-            for (int v: path)
-            {
-                std::cout << v << " ";
-            }
-            std::cout << std::endl;
         }
 };
 
@@ -103,10 +71,7 @@ int main()
     std::cout << "Graph:\n";
     g.printGraph();
 
-    int u, v;
-    std::cout << "Enter vertices (format: u v): ";
-    std::cin >> u >> v;
-    g.shortestPath(u, v);
+    g.printVerticesDegrees();
 
     return 0;
 }
