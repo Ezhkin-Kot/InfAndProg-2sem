@@ -197,8 +197,10 @@ int main()
     std::cout << "Hash-table:\n";
     hashTable.print();
 
-    std::cout << "\nSearch an employee with salary 60000:\n";
-    Employee *found = hashTable.search(60000);
+    std::cout << "\nSearch an employee with salary:\n";
+    int salary;
+    std::cin >> salary;
+    Employee *found = hashTable.search(salary);
     if (found)
     {
         found->print();
@@ -208,8 +210,8 @@ int main()
         std::cout << "Employee not found.\n";
     }
 
-    std::cout << "\nRemove an employee with salary 60000:\n";
-    hashTable.remove(60000);
+    std::cout << "\nRemove an employee with salary:\n";
+    hashTable.remove(salary);
     hashTable.print();
 
     return 0;

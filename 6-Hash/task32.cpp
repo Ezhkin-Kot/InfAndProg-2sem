@@ -171,8 +171,10 @@ int main()
     std::cout << "Hash-table:\n";
     closedHash.print();
 
-    std::cout << "\nSearch an employee with salary 55000:\n";
-    Employee *foundClosed = closedHash.search(55000);
+    int salary;
+    std::cin >> salary;
+    std::cout << "\nSearch an employee with salary:\n";
+    Employee *foundClosed = closedHash.search(salary);
     if (foundClosed)
     {
         foundClosed->print();
