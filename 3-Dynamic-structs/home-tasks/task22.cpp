@@ -33,6 +33,7 @@ public:
         }
     }
 
+    // Remove and return an element from the front
     int pop()
     {
         if (isEmpty())
@@ -81,6 +82,7 @@ public:
         topNode = new Node(value, topNode);
     }
 
+    // Pop and return the top element from the stack
     int pop()
     {
         if (isEmpty())
@@ -111,7 +113,7 @@ private:
     std::map<int, std::vector<int>> adj;
 
 public:
-    // Add undirected edge
+    // Add an undirected edge
     void addEdge(int u, int v)
     {
         adj[u].push_back(v);
@@ -135,7 +137,7 @@ public:
 
     void printGraph()
     {
-        std::cout << "Graph adjacency list:\n";
+        std::cout << "Graph:\n";
         for (const auto& pair : adj)
         {
             std::cout << pair.first << " -> ";
@@ -147,6 +149,7 @@ public:
         }
     }
 
+    // All adjacent vertices of vertex v
     std::vector<int> getAdjVertices(int v)
     {
         static const std::vector<int> empty;
@@ -195,6 +198,7 @@ public:
                 std::cout << v << " ";
                 visited.insert(v);
 
+                // Push neighbors in reverse order
                 const auto& neighbors = getAdjVertices(v);
                 for (auto it = neighbors.rbegin(); it != neighbors.rend(); ++it)
                 {
