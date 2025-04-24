@@ -1,74 +1,118 @@
 #include <iostream>
-#include <stack>
+#include <string>
+#include <sstream>
 
-std::stack<int> setStack()
-{
-    int n;
-    std::stack<int> stack;
-    std::stack<int> tempStack;
+struct Node {
+    char data;
+    Node* next;
+    Node(char val) : data(val), next(nullptr) {}
+};
 
-    std::cout << "Enter number of elements: ";
-    std::cin >> n;
+class Stack {
+private:
+    Node* top;
 
-    // Stack filling
-    std::cout << "Enter stack elements separated by space: ";
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        std::cin >> x;
-        tempStack.push(x);
+public:
+    Stack() : top(nullptr) {}
+
+    // Add element to the top of the stack
+    void push(char value) {
+        Node* newNode = new Node(value);
+        newNode->next = top;
+        top = newNode;
     }
-    while (!tempStack.empty()) {
-        stack.push(tempStack.top());
-        tempStack.pop();
+
+    // Get top element
+    char peek() const {
+        return top ? top->data : '\0';
+    }
+
+    // Remove and return top element
+    char pop() {
+        if (!top) return '\0';
+        Node* temp = top;
+        char value = temp->data;
+        top = top->next;
+        delete temp;
+        return value;
+    }
+
+    void print() const {
+        Node* current = top;
+        Stack tempStack;
+        while (current) {
+            tempStack.push(current->data);
+            current = current->next;
+        }
+        while (!tempStack.isEmpty()) {
+            std::cout << tempStack.pop() << ' ';
+        }
+        std::cout << std::endl;
+    }
+
+    bool isEmpty() const {
+        return top == nullptr;
+    }
+
+    ~Stack() {
+        while (!isEmpty()) {
+            pop();
+        }
+    }
+};
+
+Stack setStack() {
+    Stack stack;
+    std::string input;
+
+    std::cout << "Enter letters separated by space:\n";
+    std::getline(std::cin, input);
+    std::stringstream ss(input);
+
+    char ch;
+    while (ss >> ch) {
+        stack.push(ch);
     }
 
     return stack;
 }
 
-void insertAfterFirstEven(std::stack<int>& stack) {
-    std::stack<int> tempStack;
-
-    int newElem = 0;
-    std::cout << "Enter element to be inserted: ";
-    std::cin >> newElem;
-
-    // Put odd elements into tempStack until get to even
-    while (!stack.empty()) {
-        int topElement = stack.top();
-        stack.pop();
-        tempStack.push(topElement);
-
-        // Add newElem after first even element
-        if (topElement % 2 == 0) {
-            stack.push(newElem);
-            break;
-        }
-    }
-
-    // Put even elements in stack again
-    while (!tempStack.empty()) {
-        stack.push(tempStack.top());
-        tempStack.pop();
-    }
+bool isVowel(char ch) {
+    ch = std::tolower(ch);
+    std::string s = "aeiouy";
+    return s.find(ch) != std::string::npos;
 }
 
-void printStack(std::stack<int> stack)
-{
-    while (!stack.empty())
-    {
-        std::cout << stack.top() << " ";
-        stack.pop();
+void insertQuestionAfterFirstVowel(Stack& stack) {
+    Stack temp;
+
+    // Reverse stack
+    while (!stack.isEmpty()) {
+        temp.push(stack.pop());
     }
-    std::cout << std::endl;
+
+    bool isInserted = false;
+    while (!temp.isEmpty()) {
+        // Insert '?' after first vowel letter
+        if (!isInserted && isVowel(stack.peek()))
+        {
+            stack.push('?');
+            isInserted = true;
+        }
+        stack.push(temp.pop());
+    }
 }
 
 int main() {
-    std::stack<int> stack = setStack();
+    Stack stack = setStack();
 
-    insertAfterFirstEven(stack);
+    std::cout << "Stack:\n";
+    stack.print();
 
-    printStack(stack);
+    insertQuestionAfterFirstVowel(stack);
+
+    std::cout << "Stack after inserting '?' after first vowel:\n";
+    stack.print();
 
     return 0;
 }
