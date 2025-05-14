@@ -16,19 +16,22 @@ public:
     Stack() : top(nullptr) {}
 
     // Add element to the top of the stack
-    void push(char value) {
+    void push(char value) 
+    {
         Node* newNode = new Node(value);
         newNode->next = top;
         top = newNode;
     }
 
     // Get top element
-    char peek() const {
+    char peek() 
+    {
         return top ? top->data : '\0';
     }
 
     // Remove and return top element
-    char pop() {
+    char pop() 
+    {
         if (!top) return '\0';
         Node* temp = top;
         char value = temp->data;
@@ -37,31 +40,22 @@ public:
         return value;
     }
 
-    void print() const {
-        Node* current = top;
-        Stack tempStack;
-        while (current) {
-            tempStack.push(current->data);
-            current = current->next;
-        }
-        while (!tempStack.isEmpty()) {
-            std::cout << tempStack.pop() << ' ';
-        }
-        std::cout << std::endl;
-    }
-
-    bool isEmpty() const {
+    bool isEmpty() 
+    {
         return top == nullptr;
     }
 
-    ~Stack() {
-        while (!isEmpty()) {
+    ~Stack() 
+    {
+        while (!isEmpty()) 
+        {
             pop();
         }
     }
 };
 
-Stack setStack() {
+Stack setStack() 
+{
     Stack stack;
     std::string input;
 
@@ -70,14 +64,38 @@ Stack setStack() {
     std::stringstream ss(input);
 
     char ch;
-    while (ss >> ch) {
+    while (ss >> ch) 
+    {
         stack.push(ch);
     }
 
     return stack;
 }
 
-bool isVowel(char ch) {
+void printStack(Stack& s) 
+{
+    Stack tempStack;
+    char temp;
+
+    // Reverse stack
+    while (!s.isEmpty()) 
+    {
+        temp = s.pop();
+        tempStack.push(temp);
+    }
+
+    // Print reversed stack
+    while (!tempStack.isEmpty()) 
+    {
+        temp = tempStack.pop();
+        s.push(temp);
+        std::cout << temp << ' ';
+    }
+    std::cout << std::endl;
+}
+
+bool isVowel(char ch) 
+{
     ch = std::tolower(ch);
     std::string s = "aeiouy";
     return s.find(ch) != std::string::npos;
@@ -87,12 +105,14 @@ void insertQuestionAfterFirstVowel(Stack& stack) {
     Stack temp;
 
     // Reverse stack
-    while (!stack.isEmpty()) {
+    while (!stack.isEmpty()) 
+    {
         temp.push(stack.pop());
     }
 
     bool isInserted = false;
-    while (!temp.isEmpty()) {
+    while (!temp.isEmpty()) 
+    {
         // Insert '?' after first vowel letter
         if (!isInserted && isVowel(stack.peek()))
         {
@@ -103,16 +123,17 @@ void insertQuestionAfterFirstVowel(Stack& stack) {
     }
 }
 
-int main() {
+int main() 
+{
     Stack stack = setStack();
 
     std::cout << "Stack:\n";
-    stack.print();
+    printStack(stack);
 
     insertQuestionAfterFirstVowel(stack);
 
     std::cout << "Stack after inserting '?' after first vowel:\n";
-    stack.print();
+    printStack(stack);
 
     return 0;
 }

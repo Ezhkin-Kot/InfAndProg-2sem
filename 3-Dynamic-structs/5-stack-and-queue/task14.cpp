@@ -1,8 +1,10 @@
+#include <climits>
 #include <iostream>
 #include <string>
 #include <sstream>
 
-struct Node {
+struct Node 
+{
     int data;
     Node* next;
     Node(int value) : data(value), next(nullptr) {}
@@ -17,58 +19,53 @@ public:
     Queue() : front(nullptr), rear(nullptr) {}
 
     // Add an element to the end of the queue
-    void push(int value) {
+    void push(int value)
+    {
         Node* newNode = new Node(value);
-        if (!rear) {
+        if (!rear)
+        {
             front = rear = newNode;
-        } else {
+        }
+        else
+        {
             rear->next = newNode;
             rear = newNode;
         }
     }
 
-    void print() {
-        Node* temp = front;
-        while (temp) {
-            std::cout << temp->data << ' ';
-            temp = temp->next;
+    // Remove and return an element from the front
+    int pop()
+    {
+        if (isEmpty())
+        {
+            throw std::out_of_range("Queue is empty");
         }
-        std::cout << std::endl;
+        Node* temp = front;
+        int val = temp->data;
+        front = front->next;
+        if (front == nullptr)
+        {
+            rear = nullptr;
+        }
+        delete temp;
+        return val;
     }
 
-    void insertLastOddAfterMax() {
-        if (!front) return;
-
-        // Find max and last odd
-        int maxVal = front->data;
-        Node* lastOddNode = nullptr;
-        Node* temp = front;
-        while (temp) {
-            if (temp->data > maxVal) maxVal = temp->data;
-            if (temp->data % 2 != 0) lastOddNode = temp;
-            temp = temp->next;
-        }
-
-        if (!lastOddNode) return;
-
-        int lastOdd = lastOddNode->data;
-
-        // Insert lastOdd after all nodes equals to maxVal
-        temp = front;
-        while (temp) {
-            if (temp->data == maxVal) {
-                Node* newNode = new Node(lastOdd);
-                newNode->next = temp->next;
-                temp->next = newNode;
-                if (temp == rear) rear = newNode;
-                temp = newNode; // Skip over inserted node
-            }
-            temp = temp->next;
-        }
+    // Get front element
+    int peek()
+    {
+        return front->data;
     }
 
-    ~Queue() {
-        while (front) {
+    bool isEmpty()
+    {
+        return front == nullptr;
+    }
+
+    ~Queue() 
+    {
+        while (front) 
+        {
             Node* temp = front;
             front = front->next;
             delete temp;
@@ -86,23 +83,75 @@ Queue setQueue()
     std::stringstream ss(input);
 
     int x;
-    while (ss >> x) {
+    while (ss >> x) 
+    {
         q.push(x);
     }
 
     return q;
 }
 
-int main() {
+void printQueue(Queue& q)
+{
+    Queue tempQueue;
+    int temp;
+
+    while (!q.isEmpty())
+    {
+        temp = q.pop();
+        tempQueue.push(temp);
+        std::cout << temp << ' ';
+    }
+
+    while (!tempQueue.isEmpty())
+    {
+        q.push(tempQueue.pop());
+    }
+    std::cout << std::endl;
+}
+
+void insertLastOddAfterMax(Queue& q) 
+{
+    if (q.isEmpty()) return;
+
+    // Find max and last odd
+    Queue tempQueue;
+    int temp;
+    int maxVal = INT_MIN;
+    int lastOdd = 0;
+    while (!q.isEmpty()) 
+    {
+        temp = q.pop();
+        if (temp > maxVal) maxVal = temp;
+        if (temp % 2 != 0) lastOdd = temp;
+        tempQueue.push(temp);
+    }
+
+    if (lastOdd == 0) return; // There are no odd elements
+
+    // Insert lastOdd after all nodes equals to maxVal
+    while (!tempQueue.isEmpty()) 
+    {
+        temp = tempQueue.pop();
+        q.push(temp);
+        if (temp == maxVal) 
+        {
+            q.push(lastOdd);
+        }
+    }
+}
+
+int main() 
+{
     Queue queue = setQueue();
 
     std::cout << "Queue:\n";
-    queue.print();
+    printQueue(queue);
 
-    queue.insertLastOddAfterMax();
+    insertLastOddAfterMax(queue);
 
-    std::cout << "Queue after inserting last odd after max elements:\n";
-    queue.print();
+    std::cout << "Queue after inserting the last odd after max elements:\n";
+    printQueue(queue);
 
     return 0;
 }

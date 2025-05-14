@@ -2,13 +2,15 @@
 #include <string>
 #include <sstream>
 
-struct Node {
+struct Node 
+{
     int data;
     Node* next;
     Node(int val) : data(val), next(nullptr) {}
 };
 
-class Stack {
+class Stack 
+{
 private:
     Node* top;
 
@@ -16,19 +18,22 @@ public:
     Stack() : top(nullptr) {}
 
     // Add element to the top of the stack
-    void push(int value) {
+    void push(int value) 
+    {
         Node* newNode = new Node(value);
         newNode->next = top;
         top = newNode;
     }
 
     // Get top element
-    int peek() const {
+    int peek() const 
+    {
         return top->data;
     }
 
     // Remove and return top element
-    int pop() {
+    int pop() 
+    {
         if (!top) return 0;
         Node* temp = top;
         int value = temp->data;
@@ -37,31 +42,22 @@ public:
         return value;
     }
 
-    void print() const {
-        Node* current = top;
-        Stack tempStack;
-        while (current) {
-            tempStack.push(current->data);
-            current = current->next;
-        }
-        while (!tempStack.isEmpty()) {
-            std::cout << tempStack.pop() << ' ';
-        }
-        std::cout << std::endl;
-    }
-
-    bool isEmpty() const {
+    bool isEmpty() const 
+    {
         return top == nullptr;
     }
 
-    ~Stack() {
-        while (!isEmpty()) {
+    ~Stack() 
+    {
+        while (!isEmpty()) 
+        {
             pop();
         }
     }
 };
 
-Stack setStack() {
+Stack setStack() 
+{
     Stack stack;
     std::string input;
 
@@ -77,6 +73,28 @@ Stack setStack() {
     return stack;
 }
 
+void printStack(Stack& s) 
+{
+    Stack tempStack;
+    int temp;
+
+    // Reverse stack
+    while (!s.isEmpty()) 
+    {
+        temp = s.pop();
+        tempStack.push(temp);
+    }
+
+    // Print reversed stack
+    while (!tempStack.isEmpty()) 
+    {
+        temp = tempStack.pop();
+        s.push(temp);
+        std::cout << temp << ' ';
+    }
+    std::cout << std::endl;
+}
+
 // first - min, second - max
 std::pair<int, int> findMinMaxElems(Stack& stack)
 {
@@ -85,7 +103,8 @@ std::pair<int, int> findMinMaxElems(Stack& stack)
 
     Stack tempStack;
 
-    while (!stack.isEmpty()) {
+    while (!stack.isEmpty()) 
+    {
         int temp = stack.pop();
         tempStack.push(temp);
         if (temp < result.first) result.first = temp;
@@ -100,7 +119,8 @@ std::pair<int, int> findMinMaxElems(Stack& stack)
     return result;
 }
 
-void insertMinAfterMax(Stack& stack) {
+void insertMinAfterMax(Stack& stack) 
+{
     const auto [minElem, maxElem] = findMinMaxElems(stack);
     bool firstInserted = false, lastInserted = false;
 
@@ -135,12 +155,12 @@ int main() {
     Stack stack = setStack();
 
     std::cout << "Stack:\n";
-    stack.print();
+    printStack(stack);
 
     insertMinAfterMax(stack);
 
     std::cout << "Stack after inserting min element after first and last max:\n";
-    stack.print();
+    printStack(stack);
 
     return 0;
 }

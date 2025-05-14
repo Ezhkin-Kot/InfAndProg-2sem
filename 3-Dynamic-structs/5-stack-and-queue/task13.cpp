@@ -2,13 +2,15 @@
 #include <string>
 #include <sstream>
 
-struct Node {
+struct Node 
+{
     int data;
     Node* next;
     Node(int value) : data(value), next(nullptr) {}
 };
 
-class Queue {
+class Queue 
+{
 private:
     Node* front;
     Node* rear;
@@ -17,49 +19,53 @@ public:
     Queue() : front(nullptr), rear(nullptr) {}
 
     // Add an element to the end of the queue
-    void push(int value) {
+    void push(int value)
+    {
         Node* newNode = new Node(value);
-        if (!rear) {
+        if (!rear)
+        {
             front = rear = newNode;
-        } else {
+        }
+        else
+        {
             rear->next = newNode;
             rear = newNode;
         }
     }
 
-    void print() {
+    // Remove and return an element from the front
+    int pop()
+    {
+        if (isEmpty())
+        {
+            throw std::out_of_range("Queue is empty");
+        }
         Node* temp = front;
-        while (temp) {
-            std::cout << temp->data << ' ';
-            temp = temp->next;
+        int val = temp->data;
+        front = front->next;
+        if (front == nullptr)
+        {
+            rear = nullptr;
         }
-        std::cout << std::endl;
+        delete temp;
+        return val;
     }
 
-    // Cyclic shift of the queue
-    void rotateToFirstEven() {
-        if (!front) return;
-
-        Node* current = front;
-        Node* prev = nullptr;
-        while (current && current->data % 2 != 0) {
-            prev = current;
-            current = current->next;
-        }
-
-        if (!current || current == front) return;
-
-        // Queue circular
-        rear->next = front;
-
-        // Update front and rear
-        front = current;
-        rear = prev;
-        rear->next = nullptr;
+    // Get front element
+    int peek()
+    {
+        return front->data;
     }
 
-    ~Queue() {
-        while (front) {
+    bool isEmpty()
+    {
+        return front == nullptr;
+    }
+
+    ~Queue() 
+    {
+        while (front) 
+        {
             Node* temp = front;
             front = front->next;
             delete temp;
@@ -77,23 +83,60 @@ Queue setQueue()
     std::stringstream ss(input);
 
     int x;
-    while (ss >> x) {
+    while (ss >> x) 
+    {
         q.push(x);
     }
 
     return q;
 }
 
+void printQueue(Queue& q)
+{
+    Queue tempQueue;
+    int temp;
+
+    while (!q.isEmpty())
+    {
+        temp = q.pop();
+        tempQueue.push(temp);
+        std::cout << temp << ' ';
+    }
+
+    while (!tempQueue.isEmpty())
+    {
+        q.push(tempQueue.pop());
+    }
+    std::cout << std::endl;
+}
+
+// Cyclic shift of the queue
+void rotateQueueToFirstEven(Queue& q)
+{
+    Queue tempQueue;
+
+    while (!q.isEmpty() && q.peek() % 2 != 0)
+    {
+        tempQueue.push(q.pop());
+    }
+
+    while (!tempQueue.isEmpty())
+    {
+        q.push(tempQueue.pop());
+    }
+}
+
 int main() {
     Queue queue = setQueue();
 
     std::cout << "Queue before cyclic shift:\n";
-    queue.print();
+    printQueue(queue);
 
-    queue.rotateToFirstEven();
+    rotateQueueToFirstEven(queue);
 
     std::cout << "Queue after cyclic shift to first even element:\n";
-    queue.print();
+    printQueue(queue);
 
     return 0;
 }
+
