@@ -10,7 +10,8 @@ struct Node
     Node(int value) : data(value), next(nullptr) {}
 };
 
-class Queue {
+class Queue 
+{
 private:
     Node* front;
     Node* rear;
